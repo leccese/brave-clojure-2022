@@ -1,0 +1,1 @@
+This repo has my exercise solutions for the Clojure for the Brave and True book club

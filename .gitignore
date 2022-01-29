@@ -1,0 +1,6 @@
+# i think these are all things created by calva
+
+.calva/
+.clj-kondo
+.lsp
+.nrepl-port
