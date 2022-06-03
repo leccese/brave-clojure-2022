@@ -14,15 +14,28 @@
 ;; The function will take the number of quotes to download as an argument and return the atom’s final value. 
 ;; Keep in mind that you’ll need to ensure that all futures have finished before returning the atom’s final value. 
 
-(defn get-quote-word-count [_] (count (str/split (slurp "http://138.201.159.94:8090/quote") #" ")))
-
+(defn get-quote-word-count [_]
+  (reduce
+   (fn [acc word]
+     (assoc acc word (inc (get acc word 0))))
+   {}
+   (str/split (slurp "http://138.201.159.94:8090/quote") #" ")))
+(get-quote-word-count 1)
 ;; parallelizes downloading quotes without using an atom...seems like the simplier solution to me
 (defn quote-word-count-no-atom
   [n]
-  (reduce + (pmap get-quote-word-count (take n (range)))))
+  (reduce
+   #(merge-with + %1 %2)
+   {}
+   (pmap get-quote-word-count (take n (range)))))
 
 (quote-word-count-no-atom 10)
 
+(def res (quote-word-count-no-atom 100))
+(->>
+ res
+ (sort-by val >)
+ (take 10))
 
 
 ;; actually following directions and using an atom
